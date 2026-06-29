@@ -105,6 +105,6 @@ pnpm exec wrangler deploy
 ## 技術スタック
 
 - [Astro](https://astro.build/) — 静的サイト生成
-- - Lism CSS — レイアウト・コンポーネント
-  - - [Pagefind](https://pagefind.app/) — 全文検索
-    - 
+- [Lism CSS](https://lism-css.com/) — レイアウト・コンポーネント
+- [Pagefind](https://pagefind.app/) — 全文検索
+
