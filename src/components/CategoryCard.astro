@@ -1,0 +1,43 @@
+---
+import { Stack, Heading, Text, Link } from 'lism-css/astro';
+import Icon from './Icon.astro';
+
+interface Props {
+  href: string;
+  icon: string;
+  title: string;
+  description: string;
+  count: number;
+}
+
+const { href, icon, title, description, count } = Astro.props;
+---
+
+<Link href={href} td="none" c="text" d="block" class="category-card">
+  <Stack
+    bgc="base-2"
+    bdrs="20"
+    p="30"
+    g="15"
+    bd
+    bdc="divider"
+    hov={{ bxsh: '20' }}
+    hasTransition
+  >
+    <Icon name={icon} size="28px" class="card-icon" />
+    <Heading level={3} fz="l" fw="bold">{title}</Heading>
+    <Text c="text-2" fz="s">{description}</Text>
+    <Text c="text-3" fz="2xs">{count} items</Text>
+  </Stack>
+</Link>
+
+<style is:global>
+  .category-card {
+    flex: 1 1 250px;
+    max-width: 320px;
+  }
+
+  .card-icon {
+    color: var(--accent);
+  }
+</style>

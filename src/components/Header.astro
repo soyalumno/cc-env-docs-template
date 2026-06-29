@@ -1,0 +1,102 @@
+---
+import { Lism, Flex, Link, Text } from 'lism-css/astro';
+import Search from './Search.astro';
+---
+
+<Lism as="header" class="site-header">
+  <Flex ai="center" jc="between" py="15" px="20">
+    <Flex ai="center" g="20">
+      <Flex ai="center" g="10">
+        <button id="menu-toggle" class="menu-toggle" aria-label="メニュー">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/></svg>
+        </button>
+        <Link href="/" td="none" d="inline-flex" ai="center" g="10">
+          <svg class="header-logo" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/><path d="m9 10 2 2 4-4"/></svg>
+          <Text as="span" fw="bold" fz="m" class="header-title">開発ノート</Text>
+        </Link>
+      </Flex>
+      <Flex as="nav" g="0" class="header-nav">
+        <Link href="/rules" td="none" fz="xs" px="10" py="5" bdrs="5" class="header-nav-link">Rules</Link>
+        <Link href="/skills" td="none" fz="xs" px="10" py="5" bdrs="5" class="header-nav-link">Skills</Link>
+        <Link href="/agents" td="none" fz="xs" px="10" py="5" bdrs="5" class="header-nav-link">Agents</Link>
+        <Link href="/infra" td="none" fz="xs" px="10" py="5" bdrs="5" class="header-nav-link">Infra</Link>
+      </Flex>
+    </Flex>
+    <Search />
+  </Flex>
+</Lism>
+
+<div id="menu-backdrop" class="menu-backdrop"></div>
+
+<script>
+  function initMenu() {
+    const toggle = document.getElementById('menu-toggle');
+    const sidebar = document.querySelector('.sidebar') as HTMLElement;
+    const backdrop = document.getElementById('menu-backdrop');
+    if (!toggle || !sidebar || !backdrop) return;
+
+    function open() {
+      sidebar.classList.add('sidebar-open');
+      backdrop.classList.add('is-visible');
+    }
+    function close() {
+      sidebar.classList.remove('sidebar-open');
+      backdrop.classList.remove('is-visible');
+    }
+
+    toggle.addEventListener('click', () => {
+      sidebar.classList.contains('sidebar-open') ? close() : open();
+    });
+    backdrop.addEventListener('click', close);
+  }
+  initMenu();
+  document.addEventListener('astro:page-load', initMenu);
+</script>
+
+<style is:global>
+  .site-header {
+    background: #0A3F71;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-logo { color: #ffffff; }
+  .header-title { color: #ffffff; }
+
+  .header-nav-link {
+    color: rgba(255, 255, 255, 0.6) !important;
+    transition: color 0.1s, background-color 0.1s;
+  }
+
+  .header-nav-link:hover {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  .menu-backdrop {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .menu-toggle { display: block; }
+    .header-nav { display: none; }
+
+    .menu-backdrop.is-visible {
+      display: block;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 199;
+    }
+  }
+</style>

@@ -1,0 +1,22 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro';
+import DocList from '../../components/DocList.astro';
+import { Stack, Heading, Text } from 'lism-css/astro';
+import { getCollection } from 'astro:content';
+
+const agents = (await getCollection('agents')).sort((a, b) => a.data.order - b.data.order);
+const crumbs = [
+  { label: 'Home', href: '/' },
+  { label: 'Agents' },
+];
+---
+
+<DocsLayout title="Agents" crumbs={crumbs}>
+  <Stack g="30" w="100%">
+    <Stack g="5">
+      <Heading level={1} fz="2xl" fw="bold">Agents</Heading>
+      <Text c="text-2" fz="s">カスタムサブエージェントの定義</Text>
+    </Stack>
+    <DocList items={agents} basePath="/agents" category="skills" />
+  </Stack>
+</DocsLayout>

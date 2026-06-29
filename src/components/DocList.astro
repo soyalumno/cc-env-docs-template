@@ -1,0 +1,62 @@
+---
+import { Stack, Flex, Text, Link } from 'lism-css/astro';
+import Icon from './Icon.astro';
+import Badge from './Badge.astro';
+
+interface DocItem {
+  id: string;
+  data: {
+    title: string;
+    description: string;
+    icon: string;
+    trigger?: string;
+  };
+}
+
+interface Props {
+  items: DocItem[];
+  basePath: string;
+  category: 'rules' | 'skills' | 'infra';
+}
+
+const { items, basePath, category } = Astro.props;
+
+const badgeLabel = category === 'rules' ? 'Rule' : category === 'skills' ? 'Skill' : 'Infra';
+const badgePrefix = category === 'skills' ? '/' : '';
+---
+
+<Stack g="5">
+  {items.map(item => (
+    <Link href={`${basePath}/${item.id}`} td="none" c="text" d="block">
+      <Flex
+        ai="start"
+        g="15"
+        px="20"
+        py="15"
+        bdrs="10"
+        bd
+        bdc="transparent"
+        hov={{ bgc: 'base-2', bdc: 'divider' }}
+        hasTransition
+      >
+        <Icon name={item.data.icon} size="18px" class="doc-list-icon" />
+        <Stack g="5" fxg="1">
+          <Text fw="semibold" fz="m">{item.data.title}</Text>
+          <Flex g="5" fxw="wrap" ai="center">
+            <Badge label={badgeLabel} variant={category} />
+            <Badge label={`${badgePrefix}${item.id}`} variant="mono" />
+          </Flex>
+          <Text c="text-2" fz="xs">{item.data.description}</Text>
+        </Stack>
+      </Flex>
+    </Link>
+  ))}
+</Stack>
+
+<style>
+  .doc-list-icon {
+    flex-shrink: 0;
+    color: var(--text-2);
+    margin-top: 3px;
+  }
+</style>

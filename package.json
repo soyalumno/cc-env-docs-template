@@ -1,0 +1,22 @@
+{
+  "name": "cc-env-docs-template",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "sync": "node scripts/sync-content.mjs",
+    "sync:dry": "node scripts/sync-content.mjs --dry",
+    "dev": "astro dev",
+    "build": "astro build && pagefind --site dist",
+    "deploy": "node scripts/sync-content.mjs && astro build && pagefind --site dist",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^6.1.9",
+    "lism-css": "^0.23.0",
+    "rehype-slug": "^6.0.0"
+  },
+  "devDependencies": {
+    "pagefind": "^1.5.2"
+  }
+}

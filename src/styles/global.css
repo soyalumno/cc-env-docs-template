@@ -1,0 +1,146 @@
+/* CC Env Docs Design System — Token overrides
+   Base color: #0A3F71 (deep navy) */
+
+@layer lism-base {
+  :root {
+    --brand: #0A3F71;
+    --base: #ffffff;
+    --base-2: #f5f7fa;
+    --base-3: #eaeff4;
+    --text: #1a1d23;
+    --text-2: #5a6270;
+    --text-3: #8a92a0;
+    --link: #0A3F71;
+    --divider: #dce2ea;
+    --accent: #0A3F71;
+
+    --ff--base: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --ff--accent: var(--ff--base);
+    --ff--mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+    --success: #2d7a4a;
+    --warning: #b07a2e;
+    --danger: #b8433b;
+    --info: #0A3F71;
+
+    --tint-clay: #f4ece8;
+    --tint-slate: #e8edf4;
+    --tint-sage: #e9efe9;
+    --tint-sand: #f3efe6;
+  }
+}
+
+@layer lism-custom {
+  body {
+    color: var(--text);
+    line-height: 1.75;
+  }
+
+  .doc-content {
+    line-height: 1.75;
+    max-width: var(--sz--m, 56rem);
+  }
+
+  .doc-content h2 {
+    font-size: var(--fz--l);
+    font-weight: 700;
+    margin-block-start: var(--s40);
+    margin-block-end: var(--s15);
+    padding-block-end: var(--s5);
+    border-bottom: 1px solid var(--divider);
+    letter-spacing: -0.012em;
+  }
+
+  .doc-content h3 {
+    font-size: var(--fz--m);
+    font-weight: 600;
+    margin-block-start: var(--s30);
+    margin-block-end: var(--s10);
+  }
+
+  .doc-content p {
+    margin-block-end: var(--s15);
+    color: var(--text-2);
+  }
+
+  .doc-content ul,
+  .doc-content ol {
+    margin-block-end: var(--s15);
+    padding-inline-start: var(--s20);
+  }
+
+  .doc-content li {
+    margin-block-end: var(--s5);
+    color: var(--text-2);
+  }
+
+  .doc-content strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .doc-content code {
+    font-family: var(--ff--mono);
+    font-size: 0.875em;
+    background-color: #eeeef1;
+    padding: 0.125em 0.375em;
+    border-radius: 4px;
+    color: #1c1c20;
+  }
+
+  .doc-content pre {
+    background-color: #1c1c20 !important;
+    color: #d4d4d8 !important;
+    padding: 1rem !important;
+    border-radius: 8px !important;
+    overflow-x: auto;
+    margin-block-end: 1rem;
+    border: 1px solid #2a2a2f !important;
+  }
+
+  .doc-content pre code {
+    background: none !important;
+    padding: 0 !important;
+    font-size: 0.875rem;
+    color: inherit !important;
+  }
+
+  .doc-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-block-end: var(--s20);
+    font-size: var(--fz--s);
+  }
+
+  .doc-content th {
+    text-align: start;
+    font-weight: 600;
+    padding: var(--s10) var(--s15);
+    background-color: var(--base-2);
+    border-bottom: 2px solid var(--divider);
+    color: var(--text);
+  }
+
+  .doc-content td {
+    padding: var(--s10) var(--s15);
+    border-bottom: 1px solid var(--divider);
+    color: var(--text-2);
+  }
+
+  .doc-content blockquote {
+    border-inline-start: 3px solid var(--accent);
+    padding-inline-start: var(--s15);
+    margin-block-end: var(--s15);
+    color: var(--text-2);
+  }
+
+  .doc-content a {
+    color: var(--link);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .doc-content a:hover {
+    color: var(--text);
+  }
+}

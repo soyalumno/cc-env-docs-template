@@ -1,0 +1,22 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro';
+import DocList from '../../components/DocList.astro';
+import { Stack, Heading, Text } from 'lism-css/astro';
+import { getCollection } from 'astro:content';
+
+const rules = (await getCollection('rules')).sort((a, b) => a.data.order - b.data.order);
+const crumbs = [
+  { label: 'Home', href: '/' },
+  { label: 'Rules' },
+];
+---
+
+<DocsLayout title="Rules" crumbs={crumbs}>
+  <Stack g="30" w="100%">
+    <Stack g="5">
+      <Heading level={1} fz="2xl" fw="bold">📏 Rules</Heading>
+      <Text c="text-2" fz="s">Claude Code の行動規範・ガードレール</Text>
+    </Stack>
+    <DocList items={rules} basePath="/rules" category="rules" />
+  </Stack>
+</DocsLayout>

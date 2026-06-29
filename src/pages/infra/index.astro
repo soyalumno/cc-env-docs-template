@@ -1,0 +1,22 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro';
+import DocList from '../../components/DocList.astro';
+import { Stack, Heading, Text } from 'lism-css/astro';
+import { getCollection } from 'astro:content';
+
+const infra = (await getCollection('infra')).sort((a, b) => a.data.order - b.data.order);
+const crumbs = [
+  { label: 'Home', href: '/' },
+  { label: 'Infra' },
+];
+---
+
+<DocsLayout title="Infra" crumbs={crumbs}>
+  <Stack g="30" w="100%">
+    <Stack g="5">
+      <Heading level={1} fz="2xl" fw="bold">🔧 Infra</Heading>
+      <Text c="text-2" fz="s">MCP サーバー・自動化パイプライン・CLI ツール群</Text>
+    </Stack>
+    <DocList items={infra} basePath="/infra" category="infra" />
+  </Stack>
+</DocsLayout>

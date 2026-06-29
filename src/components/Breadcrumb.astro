@@ -1,0 +1,27 @@
+---
+import { Flex, Text, Link } from 'lism-css/astro';
+
+interface Crumb {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  crumbs: Crumb[];
+}
+
+const { crumbs } = Astro.props;
+---
+
+<Flex as="nav" ai="center" g="5" fz="xs" c="text-3" aria-label="breadcrumb">
+  {crumbs.map((crumb, i) => (
+    <>
+      {i > 0 && <Text as="span" c="text-3">/</Text>}
+      {crumb.href ? (
+        <Link href={crumb.href} td="none" c="text-2" hov={{ c: 'text' }}>{crumb.label}</Link>
+      ) : (
+        <Text as="span" c="text" fw="semibold">{crumb.label}</Text>
+      )}
+    </>
+  ))}
+</Flex>

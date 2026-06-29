@@ -1,0 +1,51 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro';
+import Icon from '../../components/Icon.astro';
+import Badge from '../../components/Badge.astro';
+import DateMeta from '../../components/DateMeta.astro';
+import PageNav from '../../components/PageNav.astro';
+import { Lism, Stack, Flex, Heading, Text } from 'lism-css/astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const rules = (await getCollection('rules')).sort((a, b) => a.data.order - b.data.order);
+  return rules.map((entry, i) => ({
+    params: { id: entry.id },
+    props: {
+      entry,
+      prev: rules[i - 1] ? { id: rules[i - 1].id, title: rules[i - 1].data.title } : undefined,
+      next: rules[i + 1] ? { id: rules[i + 1].id, title: rules[i + 1].data.title } : undefined,
+    },
+  }));
+}
+
+const { entry, prev, next } = Astro.props;
+const { Content, headings } = await render(entry);
+const crumbs = [
+  { label: 'Home', href: '/' },
+  { label: 'Rules', href: '/rules' },
+  { label: entry.data.title },
+];
+---
+
+<DocsLayout title={entry.data.title} crumbs={crumbs} headings={headings}>
+  <Stack g="20" w="100%">
+    <PageNav prev={prev} next={next} parentHref="/rules" parentLabel="Rules" basePath="/rules" />
+    <Stack g="10">
+      <Lism d="flex" ai="center" g="10">
+        <Icon name={entry.data.icon} size="24px" class="page-icon" />
+        <Heading level={1} fz="2xl" fw="bold">{entry.data.title}</Heading>
+      </Lism>
+      <Text c="text-2" fz="s">{entry.data.description}</Text>
+      <Flex g="5" fxw="wrap" ai="center">
+        <Badge label="Rule" variant="rules" />
+        <Badge label={entry.id} variant="mono" />
+        <Badge label={`~/.claude/rules/${entry.id}.md`} variant="default" />
+      </Flex>
+      <DateMeta created={entry.data.created} updated={entry.data.updated} />
+    </Stack>
+    <Lism class="doc-content">
+      <Content />
+    </Lism>
+  </Stack>
+</DocsLayout>

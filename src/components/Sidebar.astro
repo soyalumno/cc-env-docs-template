@@ -1,0 +1,295 @@
+---
+import { Stack, Text, Link, Lism } from 'lism-css/astro';
+import Icon from './Icon.astro';
+import { getCollection } from 'astro:content';
+
+const rules = (await getCollection('rules')).sort((a, b) => a.data.order - b.data.order);
+const skills = (await getCollection('skills')).sort((a, b) => a.data.order - b.data.order);
+const agents = (await getCollection('agents')).sort((a, b) => a.data.order - b.data.order);
+const infra = (await getCollection('infra')).sort((a, b) => a.data.order - b.data.order);
+
+const currentPath = Astro.url.pathname;
+
+const sections = [
+  { label: 'Rules', icon: 'shield', href: '/rules', items: rules, base: '/rules' },
+  { label: 'Skills', icon: 'zap', href: '/skills', items: skills, base: '/skills' },
+  { label: 'Agents', icon: 'bot', href: '/agents', items: agents, base: '/agents' },
+  { label: 'Infra', icon: 'wrench', href: '/infra', items: infra, base: '/infra' },
+];
+---
+
+<Lism as="aside" class="sidebar" w="240px" fxsh="0">
+  <Stack g="10" py="30" pr="20">
+    <div class="sidebar-filter-wrap">
+      <svg class="sidebar-filter-icon" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="sidebar-filter" type="text" class="sidebar-filter" placeholder="フィルタ..." autocomplete="off" />
+    </div>
+    {sections.map(section => {
+      const sectionActive = currentPath.startsWith(section.href);
+      return (
+        <div class="sidebar-section">
+          <button
+            class={`sidebar-toggle ${sectionActive ? 'is-active' : ''}`}
+            data-section={section.label}
+            aria-expanded={sectionActive ? 'true' : 'false'}
+          >
+            <Icon name={section.icon} size="16px" />
+            <span class="sidebar-toggle-label">{section.label}</span>
+            <span class="sidebar-toggle-count">{section.items.length}</span>
+            <svg class="sidebar-chevron" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <div class={`sidebar-items ${sectionActive ? 'is-open' : ''}`}>
+            {section.items.map(item => {
+              const itemPath = `${section.base}/${item.id}`;
+              const isActive = currentPath === itemPath || currentPath === `${itemPath}/`;
+              return (
+                <Link
+                  href={itemPath}
+                  td="none"
+                  d="block"
+                  fz="xs"
+                  px="15"
+                  py="5"
+                  bdrs="5"
+                  c={isActive ? 'text' : 'text-2'}
+                  fw={isActive ? 'semibold' : 'normal'}
+                  bgc={isActive ? 'base-2' : undefined}
+                  hov={{ bgc: 'base-2' }}
+                  class={isActive ? 'sidebar-active' : undefined}
+                  data-slug={item.id}
+                  data-desc={item.data.description || ''}
+                >
+                  {item.data.title}
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      );
+    })}
+  </Stack>
+</Lism>
+
+<script>
+  function applyFilter(q: string) {
+    document.querySelectorAll('.sidebar-section').forEach(section => {
+      const toggle = section.querySelector('.sidebar-toggle') as HTMLElement;
+      const items = section.querySelector('.sidebar-items') as HTMLElement;
+      const links = items.querySelectorAll('a');
+      let visibleCount = 0;
+
+      links.forEach(link => {
+        const el = link as HTMLElement;
+        const title = (el.textContent || '').toLowerCase();
+        const slug = (el.dataset.slug || '').toLowerCase();
+        const desc = (el.dataset.desc || '').toLowerCase();
+        const match = !q || title.includes(q) || slug.includes(q) || desc.includes(q);
+        (link as HTMLElement).style.display = match ? '' : 'none';
+        if (match) visibleCount++;
+      });
+
+      if (q) {
+        items.classList.add('is-open');
+        toggle.setAttribute('aria-expanded', 'true');
+        (section as HTMLElement).style.display = visibleCount > 0 ? '' : 'none';
+      } else {
+        (section as HTMLElement).style.display = '';
+      }
+    });
+  }
+
+  function initSidebar() {
+    document.querySelectorAll('.sidebar-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const items = btn.nextElementSibling as HTMLElement;
+        const isOpen = items.classList.contains('is-open');
+        items.classList.toggle('is-open');
+        btn.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+      });
+    });
+
+    const filter = document.getElementById('sidebar-filter') as HTMLInputElement;
+    if (!filter) return;
+
+    const saved = sessionStorage.getItem('sidebar-filter') || '';
+    if (saved) {
+      filter.value = saved;
+      applyFilter(saved.toLowerCase());
+    }
+
+    filter.addEventListener('input', () => {
+      const q = filter.value.trim().toLowerCase();
+      sessionStorage.setItem('sidebar-filter', filter.value.trim());
+      applyFilter(q);
+    });
+  }
+  initSidebar();
+  document.addEventListener('astro:page-load', initSidebar);
+</script>
+
+<style is:global>
+  .sidebar {
+    position: sticky;
+    top: 52px;
+    height: calc(100svh - 52px);
+    overflow-y: auto;
+    background: #0d1b2e;
+  }
+
+  .sidebar .sidebar-toggle {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .sidebar .sidebar-toggle:hover {
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .sidebar .sidebar-toggle.is-active {
+    color: #ffffff;
+  }
+
+  .sidebar .sidebar-toggle-count {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  .sidebar .sidebar-chevron {
+    color: rgba(255, 255, 255, 0.35);
+  }
+
+  .sidebar .sidebar-items a {
+    color: rgba(255, 255, 255, 0.55) !important;
+  }
+
+  .sidebar .sidebar-items a:hover {
+    background: rgba(255, 255, 255, 0.06) !important;
+    color: #ffffff !important;
+  }
+
+  .sidebar .sidebar-active {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.1) !important;
+    border-inline-start-color: #4a9eed !important;
+  }
+
+  .sidebar-filter-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    margin-bottom: 8px;
+    color: rgba(255, 255, 255, 0.4);
+    transition: border-color 0.15s;
+  }
+
+  .sidebar-filter-wrap:focus-within {
+    border-color: #4a9eed;
+  }
+
+  .sidebar-filter-icon {
+    flex-shrink: 0;
+  }
+
+  .sidebar-filter {
+    flex: 1;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 0.75rem;
+    font-family: inherit;
+    color: #ffffff;
+    min-width: 0;
+  }
+
+  .sidebar-filter::placeholder {
+    color: rgba(255, 255, 255, 0.35);
+  }
+
+  .sidebar-section {
+    margin-bottom: 4px;
+  }
+
+  .sidebar-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 6px 10px;
+    border: none;
+    border-radius: 8px;
+    background: none;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-2);
+    cursor: pointer;
+    transition: background-color 0.1s, color 0.1s;
+    font-family: inherit;
+    text-align: start;
+  }
+
+  .sidebar-toggle:hover {
+    background: var(--base-2);
+  }
+
+  .sidebar-toggle.is-active {
+    color: var(--text);
+  }
+
+  .sidebar-toggle-label {
+    flex: 1;
+  }
+
+  .sidebar-toggle-count {
+    font-size: 0.625rem;
+    font-weight: 500;
+    color: var(--text-3);
+    background: var(--base-2);
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+
+  .sidebar-chevron {
+    flex-shrink: 0;
+    color: var(--text-3);
+    transition: transform 0.15s;
+  }
+
+  .sidebar-toggle[aria-expanded="true"] .sidebar-chevron {
+    transform: rotate(180deg);
+  }
+
+  .sidebar-items {
+    display: none;
+    padding-inline-start: 10px;
+    padding-block: 4px;
+  }
+
+  .sidebar-items.is-open {
+    display: block;
+  }
+
+  .sidebar-active {
+    border-inline-start: 2px solid var(--accent);
+    padding-inline-start: calc(var(--s15) - 2px) !important;
+  }
+
+  @media (max-width: 768px) {
+    .sidebar {
+      position: fixed;
+      top: 52px;
+      left: 0;
+      height: calc(100svh - 52px);
+      width: 280px;
+      z-index: 200;
+      transform: translateX(-100%);
+      transition: transform 0.2s ease;
+    }
+
+    .sidebar.sidebar-open {
+      transform: translateX(0);
+    }
+  }
+</style>

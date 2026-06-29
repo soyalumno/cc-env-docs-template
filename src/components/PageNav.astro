@@ -1,0 +1,85 @@
+---
+import { Flex, Stack, Text, Link } from 'lism-css/astro';
+
+interface NavItem {
+  id: string;
+  title: string;
+}
+
+interface Props {
+  prev?: NavItem;
+  next?: NavItem;
+  parentHref: string;
+  parentLabel: string;
+  basePath: string;
+}
+
+const { prev, next, parentHref, parentLabel, basePath } = Astro.props;
+---
+
+<nav class="page-nav" aria-label="ページ移動">
+  <Flex ai="center" g="10" fxw="wrap">
+    <Link href={parentHref} td="none" class="page-nav-parent">
+      ← {parentLabel} 一覧
+    </Link>
+    {prev && (
+      <Link href={`${basePath}/${prev.id}`} td="none" class="page-nav-link">
+        <span class="page-nav-arrow">‹</span><span class="page-nav-label">{prev.title}</span>
+      </Link>
+    )}
+    {next && (
+      <Link href={`${basePath}/${next.id}`} td="none" class="page-nav-link">
+        <span class="page-nav-label">{next.title}</span><span class="page-nav-arrow">›</span>
+      </Link>
+    )}
+  </Flex>
+</nav>
+
+<style is:global>
+  .page-nav {
+    margin-block-end: 0.75rem;
+  }
+
+  .page-nav-parent {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--accent) !important;
+    padding: 4px 10px;
+    border-radius: 6px;
+    transition: background-color 0.1s;
+  }
+
+  .page-nav-parent:hover {
+    background: var(--base-2);
+  }
+
+  .page-nav-link {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    color: var(--text-3) !important;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--divider);
+    transition: color 0.1s, border-color 0.1s, background-color 0.1s;
+    width: 160px;
+  }
+
+  .page-nav-arrow {
+    flex-shrink: 0;
+  }
+
+  .page-nav-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+  }
+
+  .page-nav-link:hover {
+    color: var(--text) !important;
+    border-color: var(--accent);
+    background: var(--base-2);
+  }
+</style>

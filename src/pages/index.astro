@@ -1,0 +1,61 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import CategoryCard from '../components/CategoryCard.astro';
+import { Lism, Stack, Center, Heading, Text, Flex } from 'lism-css/astro';
+import { getCollection } from 'astro:content';
+
+const rules = await getCollection('rules');
+const skills = await getCollection('skills');
+const agents = await getCollection('agents');
+const infra = await getCollection('infra');
+---
+
+<Layout title="Home">
+  <Stack min-h="100svh">
+    <Header />
+    <Center as="main" isContainer hasGutter fxg="1" py="50">
+      <Stack g="40" w="100%">
+        <Stack g="10" ai="center">
+          <Heading level={1} fz="3xl" ta="center" fw="bold">開発ノート</Heading>
+          <Text c="text-2" fz="s" ta="center">Claude Code 開発環境のルール・スキル・インフラを体系的にまとめたリファレンス</Text>
+        </Stack>
+
+        <Flex g="20" fxw="wrap" jc="center">
+          <CategoryCard
+            href="/rules"
+            icon="shield"
+            title="Rules"
+            description="Claude Code の行動規範・ガードレール"
+            count={rules.length}
+          />
+          <CategoryCard
+            href="/skills"
+            icon="zap"
+            title="Skills"
+            description="トリガーワードで起動するカスタムスキル"
+            count={skills.length}
+          />
+          <CategoryCard
+            href="/agents"
+            icon="bot"
+            title="Agents"
+            description="カスタムサブエージェントの定義"
+            count={agents.length}
+          />
+          <CategoryCard
+            href="/infra"
+            icon="wrench"
+            title="Infra"
+            description="MCPサーバー・パイプライン・CLIツール群"
+            count={infra.length}
+          />
+        </Flex>
+
+        <Stack ai="center" g="5" py="30">
+          <Text c="text-3" fz="2xs" ff="mono">pnpm sync で ~/.claude/ から最新コンテンツを同期</Text>
+        </Stack>
+      </Stack>
+    </Center>
+  </Stack>
+</Layout>

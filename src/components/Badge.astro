@@ -1,0 +1,52 @@
+---
+interface Props {
+  label: string;
+  variant?: 'rules' | 'skills' | 'infra' | 'mono' | 'default';
+}
+
+const { label, variant = 'default' } = Astro.props;
+---
+
+<span class={`badge badge-${variant}`}>{label}</span>
+
+<style is:global>
+  .badge {
+    display: inline-block;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 4px;
+    line-height: 1.5;
+    white-space: nowrap;
+  }
+
+  .badge-rules {
+    background: var(--tint-slate, #e8edf4);
+    color: var(--accent, #0A3F71);
+  }
+
+  .badge-skills {
+    background: var(--tint-sand, #f3efe6);
+    color: #8a6d2e;
+  }
+
+  .badge-infra {
+    background: var(--tint-sage, #e9efe9);
+    color: #4a7a52;
+  }
+
+  .badge-mono {
+    background: var(--base-3, #eeeef1);
+    color: var(--text-2, #6e6e76);
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.625rem;
+  }
+
+  .badge-default {
+    background: var(--base-2, #f6f6f8);
+    color: var(--text-2, #6e6e76);
+    border: 1px solid var(--divider, #e6e6ea);
+    white-space: normal;
+    word-break: break-all;
+  }
+</style>

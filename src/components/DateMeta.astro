@@ -1,0 +1,22 @@
+---
+import { Flex, Text } from 'lism-css/astro';
+
+interface Props {
+  created?: string;
+  updated?: string;
+}
+
+const { created, updated } = Astro.props;
+if (!created && !updated) return;
+---
+
+<Flex g="15" fxw="wrap" class="date-meta">
+  {created && <Text fz="2xs" c="text-3" ff="mono">作成: {created}</Text>}
+  {updated && updated !== created && <Text fz="2xs" c="text-3" ff="mono">更新: {updated}</Text>}
+</Flex>
+
+<style is:global>
+  .date-meta {
+    opacity: 0.6;
+  }
+</style>

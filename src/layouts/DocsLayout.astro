@@ -1,0 +1,64 @@
+---
+import Layout from './Layout.astro';
+import Header from '../components/Header.astro';
+import Sidebar from '../components/Sidebar.astro';
+import Breadcrumb from '../components/Breadcrumb.astro';
+import Toc from '../components/Toc.astro';
+import { Lism, Stack, Flex } from 'lism-css/astro';
+
+interface Crumb {
+  label: string;
+  href?: string;
+}
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  title: string;
+  crumbs: Crumb[];
+  headings?: Heading[];
+}
+
+const { title, crumbs, headings = [] } = Astro.props;
+---
+
+<Layout title={title}>
+  <Stack min-h="100svh">
+    <Header />
+    <Flex fxg="1">
+      <Sidebar />
+      <Lism as="main" fxg="1" py="30" px="40" class="docs-main" data-pagefind-body>
+        <Flex g="30" w="100%">
+          <Stack g="20" fxg="1" class="docs-body">
+            <Breadcrumb crumbs={crumbs} />
+            <slot />
+          </Stack>
+          {headings.length > 0 && <Toc headings={headings} />}
+        </Flex>
+      </Lism>
+    </Flex>
+  </Stack>
+</Layout>
+
+<style>
+  .docs-main {
+    max-width: calc(100% - 240px);
+    border-inline-start: none;
+    min-height: 0;
+  }
+
+  .docs-body {
+    min-width: 0;
+  }
+
+  @media (max-width: 768px) {
+    .docs-main {
+      max-width: 100%;
+      padding-inline: 1rem;
+    }
+  }
+</style>
