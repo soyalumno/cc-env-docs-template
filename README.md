@@ -36,12 +36,37 @@ pnpm build     # サイトをビルド（検索インデックス含む）
 
 ## 主な機能
 
-- 全文検索（Pagefind）
-- サイドバーフィルタ
-- 見出しジャンプ（目次）
-- 前後ページナビゲーション
-- カテゴリバッジ
-- レスポンシブ対応
+### ホーム — カテゴリ一覧
+
+Rules / Skills / Agents / Infra の4カテゴリをカード形式で一覧表示。各カテゴリの件数も一目で分かります。
+
+![ホーム画面](docs/screenshots/home.png)
+
+### ドキュメント詳細 — 目次・前後ナビ・バッジ
+
+各ドキュメントページには、左サイドバー、右側の見出しジャンプ（ON THIS PAGE）、パンくず、前後ページナビゲーション、カテゴリバッジ、同期元ファイルパスをまとめて表示します。
+
+![ドキュメント詳細ページ](docs/screenshots/document-detail.png)
+
+### 全文検索（Pagefind）
+
+ヘッダーの検索からサイト全体を全文検索。ヒット箇所がハイライト表示されます。
+
+![全文検索](docs/screenshots/search.png)
+
+### サイドバーフィルタ
+
+サイドバー上部のフィルタにキーワードを入力すると、一致する項目だけに絞り込めます。
+
+![サイドバーフィルタ](docs/screenshots/sidebar-filter.png)
+
+### レスポンシブ対応
+
+モバイル幅ではサイドバーがハンバーガーメニューに収まり、コンテンツが1カラムに再配置されます。
+
+| モバイル表示 | メニュー展開 |
+|---|---|
+| ![モバイル表示](docs/screenshots/responsive-mobile.png) | ![メニュー展開](docs/screenshots/responsive-menu.png) |
 
 ## カスタマイズ
 
@@ -68,7 +93,7 @@ pnpm build     # サイトをビルド（検索インデックス含む）
 const SKILL_EXCLUDES = new Set(['external-skill-name']);
 ```
 
-### デプロイ（Cloudflare Workers）
+## デプロイ（Cloudflare Workers）
 
 ```bash
 pnpm add -D wrangler
@@ -80,5 +105,6 @@ pnpm exec wrangler deploy
 ## 技術スタック
 
 - [Astro](https://astro.build/) — 静的サイト生成
-- [Lism CSS](https://lism-css.com/) — レイアウト・コンポーネント
-- [Pagefind](https://pagefind.app/) — 全文検索
+- - Lism CSS — レイアウト・コンポーネント
+  - - [Pagefind](https://pagefind.app/) — 全文検索
+    - 
